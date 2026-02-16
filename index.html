@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사거리 신호등 시스템</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <h1 class="title">사거리 신호등 시스템</h1>
+
+    <!-- 상태 표시 패널 -->
+    <div class="status-panel">
+      <div class="phase-display">
+        <span class="label">현재 단계</span>
+        <span id="phase-name" class="phase-name">-</span>
+      </div>
+      <div class="timer-display">
+        <span class="label">남은 시간</span>
+        <span id="countdown" class="countdown">--</span>
+        <span class="label">초</span>
+      </div>
+      <div class="cycle-display">
+        <span class="label">사이클</span>
+        <span id="cycle-count" class="cycle-count">0</span>
+      </div>
+    </div>
+
+    <!-- 교차로 레이아웃 -->
+    <div class="intersection-wrapper">
+
+      <!-- 북쪽 신호등 -->
+      <div class="traffic-light-area north-area">
+        <div class="direction-label">북 (N)</div>
+        <div class="traffic-light" id="light-north">
+          <div class="light red"   id="north-red"></div>
+          <div class="light yellow" id="north-yellow"></div>
+          <div class="light green" id="north-green"></div>
+        </div>
+        <div class="pedestrian-signal" id="ped-north">
+          <div class="ped-icon" id="ped-north-icon">&#128694;</div>
+          <div class="ped-label" id="ped-north-label">대기</div>
+        </div>
+      </div>
+
+      <!-- 중앙 교차로 행 -->
+      <div class="intersection-row">
+
+        <!-- 서쪽 신호등 -->
+        <div class="traffic-light-area west-area">
+          <div class="direction-label">서 (W)</div>
+          <div class="traffic-light horizontal" id="light-west">
+            <div class="light red"    id="west-red"></div>
+            <div class="light yellow" id="west-yellow"></div>
+            <div class="light green"  id="west-green"></div>
+          </div>
+          <div class="pedestrian-signal" id="ped-west">
+            <div class="ped-icon" id="ped-west-icon">&#128694;</div>
+            <div class="ped-label" id="ped-west-label">대기</div>
+          </div>
+        </div>
+
+        <!-- 교차로 중앙 -->
+        <div class="intersection-center">
+          <div class="road road-horizontal"></div>
+          <div class="road road-vertical"></div>
+          <div class="crosswalk crosswalk-n"></div>
+          <div class="crosswalk crosswalk-s"></div>
+          <div class="crosswalk crosswalk-e"></div>
+          <div class="crosswalk crosswalk-w"></div>
+          <div class="center-box"></div>
+          <!-- 차량 애니메이션 -->
+          <div class="car car-ns" id="car-ns"></div>
+          <div class="car car-ew" id="car-ew"></div>
+        </div>
+
+        <!-- 동쪽 신호등 -->
+        <div class="traffic-light-area east-area">
+          <div class="direction-label">동 (E)</div>
+          <div class="traffic-light horizontal" id="light-east">
+            <div class="light red"    id="east-red"></div>
+            <div class="light yellow" id="east-yellow"></div>
+            <div class="light green"  id="east-green"></div>
+          </div>
+          <div class="pedestrian-signal" id="ped-east">
+            <div class="ped-icon" id="ped-east-icon">&#128694;</div>
+            <div class="ped-label" id="ped-east-label">대기</div>
+          </div>
+        </div>
+
+      </div><!-- end intersection-row -->
+
+      <!-- 남쪽 신호등 -->
+      <div class="traffic-light-area south-area">
+        <div class="direction-label">남 (S)</div>
+        <div class="traffic-light" id="light-south">
+          <div class="light red"    id="south-red"></div>
+          <div class="light yellow" id="south-yellow"></div>
+          <div class="light green"  id="south-green"></div>
+        </div>
+        <div class="pedestrian-signal" id="ped-south">
+          <div class="ped-icon" id="ped-south-icon">&#128694;</div>
+          <div class="ped-label" id="ped-south-label">대기</div>
+        </div>
+      </div>
+
+    </div><!-- end intersection-wrapper -->
+
+    <!-- 단계 타임라인 -->
+    <div class="phase-timeline">
+      <div class="phase-step" id="step-ns-green">
+        <div class="step-lights">
+          <span class="mini-light green-mini"></span>
+          <span class="mini-light red-mini"></span>
+        </div>
+        <div class="step-label">NS 직진<br/><small id="dur-ns-green">30s</small></div>
+      </div>
+      <div class="phase-arrow">&#9654;</div>
+      <div class="phase-step" id="step-ns-yellow">
+        <div class="step-lights">
+          <span class="mini-light yellow-mini"></span>
+          <span class="mini-light red-mini"></span>
+        </div>
+        <div class="step-label">NS 황색<br/><small id="dur-ns-yellow">5s</small></div>
+      </div>
+      <div class="phase-arrow">&#9654;</div>
+      <div class="phase-step" id="step-ew-green">
+        <div class="step-lights">
+          <span class="mini-light red-mini"></span>
+          <span class="mini-light green-mini"></span>
+        </div>
+        <div class="step-label">EW 직진<br/><small id="dur-ew-green">30s</small></div>
+      </div>
+      <div class="phase-arrow">&#9654;</div>
+      <div class="phase-step" id="step-ew-yellow">
+        <div class="step-lights">
+          <span class="mini-light red-mini"></span>
+          <span class="mini-light yellow-mini"></span>
+        </div>
+        <div class="step-label">EW 황색<br/><small id="dur-ew-yellow">5s</small></div>
+      </div>
+    </div>
+
+    <!-- 제어 패널 -->
+    <div class="control-panel">
+      <button id="btn-start-stop" class="btn btn-primary" onclick="toggleSimulation()">
+        시작
+      </button>
+      <button id="btn-reset" class="btn btn-secondary" onclick="resetSimulation()">
+        초기화
+      </button>
+      <div class="speed-control">
+        <label for="speed-slider">속도: <span id="speed-label">1x</span></label>
+        <input type="range" id="speed-slider" min="1" max="10" value="1"
+               oninput="changeSpeed(this.value)" />
+      </div>
+    </div>
+
+    <!-- 설정 패널 -->
+    <div class="settings-panel">
+      <h3>신호 시간 설정 (초)</h3>
+      <div class="settings-grid">
+        <label>NS 초록:</label>
+        <input type="number" id="set-ns-green" value="30" min="5" max="120"
+               onchange="updateDuration('nsGreen', this.value)" />
+        <label>NS 황색:</label>
+        <input type="number" id="set-ns-yellow" value="5" min="2" max="10"
+               onchange="updateDuration('nsYellow', this.value)" />
+        <label>EW 초록:</label>
+        <input type="number" id="set-ew-green" value="30" min="5" max="120"
+               onchange="updateDuration('ewGreen', this.value)" />
+        <label>EW 황색:</label>
+        <input type="number" id="set-ew-yellow" value="5" min="2" max="10"
+               onchange="updateDuration('ewYellow', this.value)" />
+      </div>
+    </div>
+
+  </div><!-- end app-container -->
+
+  <script src="traffic_light.js"></script>
+</body>
+</html>
